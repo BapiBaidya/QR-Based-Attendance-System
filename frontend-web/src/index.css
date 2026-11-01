@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Enterprise QR Attendance Design System — Sleek Dark / Cybernetic Glass
+   Enterprise QR Attendance Design System — 3D Cyber-Futuristic & Glass HUD
    ========================================================================== */
 
 :root {
@@ -7,47 +7,58 @@
   --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  /* Color Palette */
-  --bg-darkest: #07090e;
-  --bg-primary: #0b0f19;
-  --bg-card: rgba(18, 24, 38, 0.75);
-  --bg-card-hover: rgba(26, 34, 52, 0.85);
-  --bg-glass: rgba(15, 23, 42, 0.65);
-  --bg-input: rgba(11, 15, 25, 0.8);
+  /* Deep Space Color Palette */
+  --bg-darkest: #05070d;
+  --bg-primary: #0a0e1a;
+  --bg-secondary: #0f1527;
+  --bg-card: rgba(16, 23, 41, 0.72);
+  --bg-card-hover: rgba(24, 34, 58, 0.88);
+  --bg-glass: rgba(14, 21, 38, 0.6);
+  --bg-glass-heavy: rgba(10, 15, 29, 0.85);
+  --bg-input: rgba(8, 12, 22, 0.85);
 
-  /* Primary Accent & Brand */
+  /* Cyber & Futuristic Neon Accents */
+  --cyan: #00f2fe;
+  --cyan-dark: #0891b2;
+  --cyan-glow: rgba(0, 242, 254, 0.4);
+  --cyan-glow-subtle: rgba(0, 242, 254, 0.15);
+
   --primary: #6366f1;
-  --primary-glow: rgba(99, 102, 241, 0.35);
   --primary-light: #818cf8;
-  --primary-dark: #4f46e5;
+  --primary-dark: #4338ca;
+  --primary-glow: rgba(99, 102, 241, 0.4);
 
-  /* Secondary Accents */
-  --cyan: #06b6d4;
-  --cyan-glow: rgba(6, 182, 212, 0.35);
+  --purple: #a855f7;
+  --purple-glow: rgba(168, 85, 247, 0.35);
+
   --emerald: #10b981;
-  --emerald-glow: rgba(16, 185, 129, 0.3);
+  --emerald-glow: rgba(16, 185, 129, 0.35);
+
   --amber: #f59e0b;
   --amber-glow: rgba(245, 158, 11, 0.3);
-  --rose: #f43f5e;
-  --rose-glow: rgba(244, 63, 94, 0.3);
-  --purple: #a855f7;
 
-  /* Borders & Dividers */
+  --rose: #f43f5e;
+  --rose-glow: rgba(244, 63, 94, 0.35);
+
+  /* Borders & Specular Lines */
   --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-glow: rgba(99, 102, 241, 0.3);
-  --border-active: rgba(6, 182, 212, 0.4);
+  --border-highlight: rgba(255, 255, 255, 0.18);
+  --border-glow: rgba(0, 242, 254, 0.35);
+  --border-primary-glow: rgba(99, 102, 241, 0.4);
 
   /* Typography Colors */
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
   --text-subtle: #64748b;
+  --text-cyber: #38bdf8;
 
-  /* Shadows & Depth */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 8px 24px -4px rgba(0, 0, 0, 0.5);
-  --shadow-lg: 0 16px 36px -6px rgba(0, 0, 0, 0.65);
-  --shadow-neon: 0 0 25px var(--primary-glow);
-  --shadow-neon-cyan: 0 0 25px var(--cyan-glow);
+  /* 3D Shadows & Volumetric Glows */
+  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 10px 30px -5px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 20px 45px -8px rgba(0, 0, 0, 0.8);
+  --shadow-3d: 0 16px 36px rgba(0, 0, 0, 0.65), 0 1px 0 rgba(255, 255, 255, 0.1) inset;
+  --shadow-neon: 0 0 30px var(--primary-glow);
+  --shadow-neon-cyan: 0 0 30px var(--cyan-glow);
 
   /* Radii */
   --radius-sm: 8px;
@@ -72,9 +83,12 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   background-image: 
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99, 102, 241, 0.18), transparent 70%),
-    radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.12), transparent 50%),
-    radial-gradient(circle at 10% 90%, rgba(168, 85, 247, 0.1), transparent 50%);
+    radial-gradient(ellipse 90% 60% at 50% -15%, rgba(99, 102, 241, 0.22), transparent 70%),
+    radial-gradient(circle at 85% 75%, rgba(0, 242, 254, 0.14), transparent 55%),
+    radial-gradient(circle at 15% 85%, rgba(168, 85, 247, 0.12), transparent 50%),
+    linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 48px 48px, 48px 48px;
   background-attachment: fixed;
 }
 
@@ -85,19 +99,44 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--text-main);
 }
 
-/* Glassmorphic Container */
+/* 3D Glassmorphic Container with Specular Sheen */
 .glass-panel {
   background: var(--bg-card);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border-subtle);
+  border-top: 1px solid var(--border-highlight);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: var(--shadow-3d);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+  pointer-events: none;
 }
 
 .glass-panel:hover {
-  border-color: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 24px 50px -10px rgba(0, 0, 0, 0.85), 0 0 20px rgba(0, 242, 254, 0.15);
+}
+
+/* 3D Interactive Card Tilt & Elevation */
+.card-3d {
+  transform: perspective(1000px) translateZ(0);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-3d:hover {
+  transform: perspective(1000px) translateY(-4px) rotateX(2deg);
 }
 
 /* Cybernetic Neon Glow Borders */
@@ -109,18 +148,20 @@ h1, h2, h3, h4, h5, h6 {
   content: '';
   position: absolute;
   inset: -1px;
-  background: linear-gradient(135deg, var(--primary), var(--cyan), var(--purple));
+  background: linear-gradient(135deg, var(--cyan), var(--primary), var(--purple));
   border-radius: inherit;
   z-index: -1;
-  opacity: 0.4;
-  transition: opacity 0.3s ease;
+  opacity: 0.35;
+  transition: opacity 0.3s ease, filter 0.3s ease;
+  filter: blur(1px);
 }
 
 .glow-border:hover::before {
-  opacity: 0.8;
+  opacity: 0.85;
+  filter: blur(3px);
 }
 
-/* Buttons */
+/* Futuristic 3D Push Buttons */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -129,25 +170,28 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   font-weight: 600;
   font-size: 0.95rem;
-  padding: 10px 20px;
+  padding: 10px 22px;
   border-radius: var(--radius-md);
   border: 1px solid transparent;
   cursor: pointer;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   text-decoration: none;
   user-select: none;
+  position: relative;
+  overflow: hidden;
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);
   color: #ffffff;
-  box-shadow: 0 4px 16px var(--primary-glow);
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 6px 20px var(--primary-glow), 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 22px rgba(99, 102, 241, 0.5);
-  background: linear-gradient(135deg, var(--primary-light), var(--primary));
+  background: linear-gradient(135deg, #818cf8 0%, #4f46e5 100%);
+  box-shadow: 0 8px 28px rgba(99, 102, 241, 0.6), 0 0 15px rgba(99, 102, 241, 0.4);
 }
 
 .btn-primary:active {
@@ -155,77 +199,85 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-cyan {
-  background: linear-gradient(135deg, var(--cyan), #0891b2);
-  color: #07090e;
+  background: linear-gradient(135deg, var(--cyan) 0%, #0284c7 100%);
+  color: #05070d;
   font-weight: 700;
-  box-shadow: 0 4px 16px var(--cyan-glow);
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 6px 22px var(--cyan-glow);
 }
 
 .btn-cyan:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 22px rgba(6, 182, 212, 0.5);
+  background: linear-gradient(135deg, #38bdf8 0%, #00f2fe 100%);
+  box-shadow: 0 8px 30px rgba(0, 242, 254, 0.6), 0 0 20px rgba(0, 242, 254, 0.4);
 }
 
 .btn-danger {
   background: rgba(244, 63, 94, 0.15);
   color: #fda4af;
-  border-color: rgba(244, 63, 94, 0.3);
+  border: 1px solid rgba(244, 63, 94, 0.35);
 }
 
 .btn-danger:hover {
   background: var(--rose);
   color: #ffffff;
   border-color: var(--rose);
-  box-shadow: 0 4px 16px var(--rose-glow);
+  box-shadow: 0 6px 22px var(--rose-glow);
+  transform: translateY(-2px);
 }
 
 .btn-ghost {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.04);
   color: var(--text-muted);
-  border-color: var(--border-subtle);
+  border: 1px solid var(--border-subtle);
 }
 
 .btn-ghost:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.09);
   color: var(--text-main);
-  border-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.22);
+  transform: translateY(-1px);
 }
 
-/* Badges */
+/* Badges with 3D Holographic Glint */
 .badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  padding: 4px 10px;
+  padding: 5px 12px;
   border-radius: var(--radius-full);
 }
 
 .badge-emerald {
   background: rgba(16, 185, 129, 0.15);
   color: #34d399;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.2);
 }
 
 .badge-cyan {
-  background: rgba(6, 182, 212, 0.15);
+  background: rgba(0, 242, 254, 0.14);
   color: #38bdf8;
-  border: 1px solid rgba(6, 182, 212, 0.3);
+  border: 1px solid rgba(0, 242, 254, 0.35);
+  box-shadow: 0 0 12px rgba(0, 242, 254, 0.2);
 }
 
 .badge-amber {
   background: rgba(245, 158, 11, 0.15);
   color: #fbbf24;
-  border: 1px solid rgba(245, 158, 11, 0.3);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.2);
 }
 
 .badge-purple {
   background: rgba(168, 85, 247, 0.15);
   color: #c084fc;
-  border: 1px solid rgba(168, 85, 247, 0.3);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.2);
 }
 
 /* Pulsing Status Dot */
@@ -248,11 +300,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @keyframes pulse-ring {
-  0% { transform: scale(1); opacity: 0.8; }
-  100% { transform: scale(2.5); opacity: 0; }
+  0% { transform: scale(0.9); opacity: 0.8; }
+  100% { transform: scale(2.6); opacity: 0; }
 }
 
-/* Inputs */
+/* Input Fields */
 .input-field {
   width: 100%;
   background: var(--bg-input);
@@ -260,63 +312,83 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: var(--radius-md);
   padding: 12px 16px;
   color: var(--text-main);
-  font-family: var(--font-body);
+  font-family: inherit;
   font-size: 0.95rem;
+  transition: all 0.25s ease;
   outline: none;
-  transition: all 0.2s ease;
 }
 
 .input-field:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px var(--primary-glow);
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 3px rgba(0, 242, 254, 0.18), 0 0 15px rgba(0, 242, 254, 0.2);
+  background: rgba(10, 16, 30, 0.95);
 }
 
 .input-field::placeholder {
   color: var(--text-subtle);
 }
 
-/* Animations */
-@keyframes slideDownFade {
+/* 3D Holographic HUD Laser Scanline */
+@keyframes laser-sweep {
+  0% {
+    top: 0%;
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 0.9;
+  }
+  100% {
+    top: 98%;
+    opacity: 0.1;
+  }
+}
+
+.laser-scanner {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--cyan), #ffffff, var(--cyan), transparent);
+  box-shadow: 0 0 15px var(--cyan), 0 0 30px var(--cyan);
+  pointer-events: none;
+  animation: laser-sweep 2.8s ease-in-out infinite alternate;
+  z-index: 5;
+}
+
+/* Interactive Radar HUD Animation for Geolocation */
+@keyframes radar-sweep {
   from {
-    opacity: 0;
-    transform: translateY(-12px);
+    transform: rotate(0deg);
   }
   to {
-    opacity: 1;
-    transform: translateY(0);
+    transform: rotate(360deg);
   }
 }
 
-@keyframes slideUpFade {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.radar-sweep-beam {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent 0deg, transparent 270deg, rgba(0, 242, 254, 0.05) 300deg, rgba(0, 242, 254, 0.4) 360deg);
+  animation: radar-sweep 4s linear infinite;
+  pointer-events: none;
 }
 
-.animate-fade-in {
-  animation: slideDownFade 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-/* Custom Scrollbar */
+/* Custom Futuristic Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-primary);
+  background: rgba(5, 7, 13, 0.6);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: var(--cyan);
 }

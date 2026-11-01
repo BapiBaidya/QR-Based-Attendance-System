@@ -53,57 +53,93 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
       justifyContent: 'center',
       padding: '24px',
       position: 'relative',
+      overflow: 'hidden',
     }}>
-      <div className="glass-panel" style={{
-        maxWidth: 460,
+      {/* 3D Ambient Volumetric Light Orbs */}
+      <div style={{
+        position: 'absolute',
+        width: 500,
+        height: 500,
+        borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, transparent 70%)',
+        top: '10%',
+        left: '20%',
+        filter: 'blur(50px)',
+        pointerEvents: 'none',
+      }} />
+      <div style={{
+        position: 'absolute',
+        width: 450,
+        height: 450,
+        borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(0, 242, 254, 0.2) 0%, transparent 70%)',
+        bottom: '10%',
+        right: '20%',
+        filter: 'blur(50px)',
+        pointerEvents: 'none',
+      }} />
+
+      <div className="glass-panel card-3d" style={{
+        maxWidth: 480,
         width: '100%',
-        padding: '40px 36px',
+        padding: '42px 38px',
         position: 'relative',
         zIndex: 10,
-        boxShadow: '0 20px 50px rgba(0, 0, 0, 0.7), 0 0 30px var(--primary-glow)',
+        background: 'linear-gradient(145deg, rgba(16, 23, 44, 0.88), rgba(8, 12, 24, 0.95))',
+        border: '1px solid rgba(0, 242, 254, 0.25)',
+        boxShadow: '0 25px 60px rgba(0, 0, 0, 0.85), 0 0 35px rgba(0, 242, 254, 0.15)',
       }}>
         {/* Brand Icon & Heading */}
         <div style={{ textAlign: 'center', marginBottom: 28 }}>
           <div style={{
-            width: 56,
-            height: 56,
+            width: 60,
+            height: 60,
             borderRadius: 'var(--radius-lg)',
-            background: 'linear-gradient(135deg, var(--primary), var(--cyan))',
+            background: 'linear-gradient(135deg, var(--cyan), var(--primary))',
             display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: 'var(--shadow-neon)',
+            boxShadow: '0 0 25px var(--cyan-glow)',
             marginBottom: 16,
+            border: '1px solid rgba(255, 255, 255, 0.3)',
           }}>
-            <QrCode style={{ width: 32, height: 32, color: '#ffffff' }} />
+            <QrCode style={{ width: 34, height: 34, color: '#05070d' }} />
           </div>
 
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: 6 }}>
+          <h1 style={{ fontSize: '1.85rem', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 6 }}>
             AegisQR Console
           </h1>
           <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
-            Enterprise Anti-Proxy Dynamic QR & Faculty Feed
+            Enterprise Anti-Proxy Dynamic QR & Faculty Command Center
           </p>
         </div>
 
         {/* Demo Fast-Fill Pill Buttons */}
         <div style={{
-          background: 'rgba(255, 255, 255, 0.03)',
-          border: '1px solid var(--border-subtle)',
+          background: 'rgba(6, 12, 26, 0.7)',
+          border: '1px solid rgba(0, 242, 254, 0.2)',
           borderRadius: 'var(--radius-md)',
-          padding: '10px 14px',
+          padding: '12px 14px',
           marginBottom: 24,
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.75rem', color: 'var(--text-subtle)', marginBottom: 8 }}>
-            <Sparkles style={{ width: 12, height: 12, color: 'var(--cyan)' }} />
-            <span>QUICK PRE-FILL CREDENTIALS</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.72rem', color: 'var(--text-cyber)', marginBottom: 8, fontWeight: 700, letterSpacing: '0.04em' }}>
+            <Sparkles style={{ width: 13, height: 13, color: 'var(--cyan)' }} />
+            <span>FAST DEMO CREDENTIALS</span>
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
             <button
               type="button"
               onClick={() => handleDemoFill('TEACHER')}
               className="btn btn-ghost"
-              style={{ flex: 1, padding: '6px 10px', fontSize: '0.75rem', borderRadius: 'var(--radius-sm)' }}
+              style={{
+                flex: 1,
+                padding: '8px 12px',
+                fontSize: '0.78rem',
+                borderRadius: 'var(--radius-sm)',
+                border: '1px solid rgba(0, 242, 254, 0.25)',
+                color: 'var(--cyan)',
+                fontWeight: 700,
+              }}
             >
               Faculty / Teacher
             </button>
@@ -111,7 +147,15 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
               type="button"
               onClick={() => handleDemoFill('ADMIN')}
               className="btn btn-ghost"
-              style={{ flex: 1, padding: '6px 10px', fontSize: '0.75rem', borderRadius: 'var(--radius-sm)' }}
+              style={{
+                flex: 1,
+                padding: '8px 12px',
+                fontSize: '0.78rem',
+                borderRadius: 'var(--radius-sm)',
+                border: '1px solid rgba(168, 85, 247, 0.25)',
+                color: '#c084fc',
+                fontWeight: 700,
+              }}
             >
               Administrator
             </button>
@@ -121,7 +165,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
         {error && (
           <div style={{
             background: 'rgba(244, 63, 94, 0.15)',
-            border: '1px solid rgba(244, 63, 94, 0.3)',
+            border: '1px solid rgba(244, 63, 94, 0.35)',
             color: '#fda4af',
             padding: '10px 14px',
             borderRadius: 'var(--radius-md)',
@@ -139,13 +183,13 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
         {/* Sign In Form */}
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
           <div>
-            <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-subtle)', marginBottom: 6, fontWeight: 600 }}>
+            <label style={{ display: 'block', fontSize: '0.78rem', color: 'var(--text-cyber)', marginBottom: 6, fontWeight: 700, letterSpacing: '0.03em' }}>
               INSTITUTION EMAIL
             </label>
             <div style={{ position: 'relative' }}>
               <Mail style={{
-                width: 16,
-                height: 16,
+                width: 17,
+                height: 17,
                 color: 'var(--text-subtle)',
                 position: 'absolute',
                 left: 14,
@@ -155,7 +199,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
               <input
                 type="email"
                 className="input-field"
-                placeholder="prof.turing@university.edu"
+                placeholder="teacher@university.edu"
                 style={{ paddingLeft: 42 }}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -165,13 +209,13 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-subtle)', marginBottom: 6, fontWeight: 600 }}>
+            <label style={{ display: 'block', fontSize: '0.78rem', color: 'var(--text-cyber)', marginBottom: 6, fontWeight: 700, letterSpacing: '0.03em' }}>
               PASSWORD
             </label>
             <div style={{ position: 'relative' }}>
               <Lock style={{
-                width: 16,
-                height: 16,
+                width: 17,
+                height: 17,
                 color: 'var(--text-subtle)',
                 position: 'absolute',
                 left: 14,
@@ -194,17 +238,17 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
             type="submit"
             disabled={isLoading}
             className="btn btn-primary"
-            style={{ width: '100%', padding: '12px', marginTop: 8 }}
+            style={{ width: '100%', padding: '13px', marginTop: 8, fontSize: '0.95rem' }}
           >
-            <span>{isLoading ? 'Authenticating...' : 'Sign In to Faculty Portal'}</span>
+            <span>{isLoading ? 'Verifying Identity...' : 'Sign In to Portal'}</span>
             <ArrowRight style={{ width: 16, height: 16 }} />
           </button>
         </form>
 
         <div style={{
-          marginTop: 24,
+          marginTop: 26,
           paddingTop: 18,
-          borderTop: '1px solid var(--border-subtle)',
+          borderTop: '1px solid rgba(255, 255, 255, 0.08)',
           textAlign: 'center',
           fontSize: '0.75rem',
           color: 'var(--text-subtle)',
@@ -213,8 +257,8 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
           justifyContent: 'center',
           gap: 6,
         }}>
-          <ShieldCheck style={{ width: 14, height: 14, color: 'var(--cyan)' }} />
-          <span>Protected with Argon2id & Hardware Device Lock</span>
+          <ShieldCheck style={{ width: 15, height: 15, color: 'var(--cyan)' }} />
+          <span>Secured with Argon2id & Hardware Device Lock</span>
         </div>
       </div>
     </div>

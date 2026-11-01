@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import QRCode from 'qrcode';
 import type { QRPayload } from '../types';
 import { api } from '../api/client';
-import { Maximize2, Minimize2, RefreshCw, ShieldCheck, Key, Clock, AlertTriangle } from 'lucide-react';
+import { Maximize2, Minimize2, RefreshCw, ShieldCheck, Key, Clock, AlertTriangle, Cpu } from 'lucide-react';
 
 interface TeacherQrDisplayProps {
   sessionId: string;
@@ -82,10 +82,10 @@ export const TeacherQrDisplay: React.FC<TeacherQrDisplayProps> = ({
         width: isFullscreen ? 480 : 320,
         margin: 2,
         color: {
-          dark: '#07090e',
+          dark: '#05070d',
           light: '#ffffff',
         },
-        errorCorrectionLevel: 'H', // Highest error correction for easy scanning across lecture halls
+        errorCorrectionLevel: 'H',
       },
       (err) => {
         if (err) {
@@ -130,7 +130,7 @@ export const TeacherQrDisplay: React.FC<TeacherQrDisplayProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`glass-panel ${isFullscreen ? 'fullscreen-mode' : ''}`}
+      className={`glass-panel card-3d ${isFullscreen ? 'fullscreen-mode' : ''}`}
       style={{
         padding: isFullscreen ? '40px 60px' : '28px',
         display: 'flex',
@@ -138,8 +138,10 @@ export const TeacherQrDisplay: React.FC<TeacherQrDisplayProps> = ({
         alignItems: 'center',
         justifyContent: 'center',
         position: 'relative',
-        background: isFullscreen ? '#07090e' : 'var(--bg-card)',
-        minHeight: isFullscreen ? '100vh' : 520,
+        background: isFullscreen ? '#05070d' : 'linear-gradient(145deg, rgba(16, 23, 41, 0.8), rgba(9, 13, 26, 0.95))',
+        border: '1px solid rgba(0, 242, 254, 0.25)',
+        minHeight: isFullscreen ? '100vh' : 530,
+        boxShadow: '0 20px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(0, 242, 254, 0.1)',
       }}
     >
       {/* Top Header / Status */}
@@ -150,52 +152,53 @@ export const TeacherQrDisplay: React.FC<TeacherQrDisplayProps> = ({
         justifyContent: 'space-between',
         marginBottom: 20,
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <div style={{
-            width: 38,
-            height: 38,
-            borderRadius: '50%',
-            background: 'rgba(6, 182, 212, 0.15)',
-            border: '1px solid rgba(6, 182, 212, 0.3)',
+            width: 40,
+            height: 40,
+            borderRadius: 'var(--radius-md)',
+            background: 'linear-gradient(135deg, rgba(0, 242, 254, 0.2), rgba(99, 102, 241, 0.3))',
+            border: '1px solid rgba(0, 242, 254, 0.4)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            boxShadow: '0 0 15px rgba(0, 242, 254, 0.25)',
           }}>
-            <ShieldCheck style={{ width: 20, height: 20, color: 'var(--cyan)' }} />
+            <Cpu style={{ width: 22, height: 22, color: 'var(--cyan)' }} />
           </div>
           <div>
-            <h3 style={{ fontSize: isFullscreen ? '1.5rem' : '1.15rem', fontWeight: 700 }}>
+            <h3 style={{ fontSize: isFullscreen ? '1.5rem' : '1.18rem', fontWeight: 800, letterSpacing: '-0.02em' }}>
               Dynamic Rotating QR
             </h3>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-              Rotates every 15s • HMAC-SHA256 Signed
+              Rotates every 15s • HMAC-SHA256 • Redis SETNX Nonce
             </p>
           </div>
         </div>
 
         {/* Circular Countdown Gauge & Controls */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           {/* Circular Countdown Ring */}
           <div style={{
             position: 'relative',
-            width: 54,
-            height: 54,
+            width: 52,
+            height: 52,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
           }}>
             <svg style={{ width: '100%', height: '100%', transform: 'rotate(-90deg)' }}>
               <circle
-                cx="27"
-                cy="27"
+                cx="26"
+                cy="26"
                 r={radius}
                 fill="none"
-                stroke="rgba(255, 255, 255, 0.1)"
+                stroke="rgba(255, 255, 255, 0.08)"
                 strokeWidth="4"
               />
               <circle
-                cx="27"
-                cy="27"
+                cx="26"
+                cy="26"
                 r={radius}
                 fill="none"
                 stroke={secondsRemaining <= 4 ? 'var(--rose)' : 'var(--cyan)'}
@@ -203,15 +206,18 @@ export const TeacherQrDisplay: React.FC<TeacherQrDisplayProps> = ({
                 strokeDasharray={circumference}
                 strokeDashoffset={strokeDashoffset}
                 strokeLinecap="round"
-                style={{ transition: 'stroke-dashoffset 0.8s linear, stroke 0.3s ease' }}
+                style={{
+                  transition: 'stroke-dashoffset 0.8s linear, stroke 0.3s ease',
+                  filter: secondsRemaining <= 4 ? 'drop-shadow(0 0 6px var(--rose))' : 'drop-shadow(0 0 6px var(--cyan))',
+                }}
               />
             </svg>
             <div style={{
               position: 'absolute',
               fontFamily: 'var(--font-mono)',
-              fontSize: '0.9rem',
-              fontWeight: 700,
-              color: secondsRemaining <= 4 ? '#fda4af' : 'var(--text-main)',
+              fontSize: '0.88rem',
+              fontWeight: 800,
+              color: secondsRemaining <= 4 ? '#fda4af' : 'var(--cyan)',
             }}>
               {secondsRemaining}s
             </div>
@@ -222,7 +228,7 @@ export const TeacherQrDisplay: React.FC<TeacherQrDisplayProps> = ({
             onClick={() => fetchQRPayload()}
             disabled={isLoading || !isSessionActive}
             className="btn btn-ghost"
-            style={{ padding: '8px 12px' }}
+            style={{ padding: '8px 12px', height: 38 }}
             title="Rotate QR code now"
           >
             <RefreshCw style={{
@@ -236,7 +242,7 @@ export const TeacherQrDisplay: React.FC<TeacherQrDisplayProps> = ({
           <button
             onClick={toggleFullscreen}
             className="btn btn-ghost"
-            style={{ padding: '8px 12px' }}
+            style={{ padding: '8px 12px', height: 38 }}
             title={isFullscreen ? 'Exit projector mode' : 'Open projector mode'}
           >
             {isFullscreen ? (
@@ -248,20 +254,31 @@ export const TeacherQrDisplay: React.FC<TeacherQrDisplayProps> = ({
         </div>
       </div>
 
-      {/* Main Canvas Display with Glow Frame */}
+      {/* Main Canvas Display with 3D Cyber Frame & Laser Scanner */}
       <div style={{
         position: 'relative',
         padding: 16,
         background: '#ffffff',
         borderRadius: 'var(--radius-lg)',
         boxShadow: isFullscreen 
-          ? '0 0 60px rgba(6, 182, 212, 0.4), 0 20px 50px rgba(0, 0, 0, 0.8)'
-          : '0 0 35px var(--cyan-glow), var(--shadow-lg)',
+          ? '0 0 80px rgba(0, 242, 254, 0.45), 0 25px 60px rgba(0, 0, 0, 0.9)'
+          : '0 0 45px rgba(0, 242, 254, 0.35), 0 15px 35px rgba(0, 0, 0, 0.7)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         margin: '14px 0',
+        overflow: 'hidden',
+        border: '3px solid rgba(0, 242, 254, 0.6)',
       }}>
+        {/* Animated Laser Scanner Line */}
+        {isSessionActive && <div className="laser-scanner" />}
+
+        {/* 4 Corner Tech Brackets */}
+        <div style={{ position: 'absolute', top: 6, left: 6, width: 14, height: 14, borderTop: '3px solid var(--cyan-dark)', borderLeft: '3px solid var(--cyan-dark)' }} />
+        <div style={{ position: 'absolute', top: 6, right: 6, width: 14, height: 14, borderTop: '3px solid var(--cyan-dark)', borderRight: '3px solid var(--cyan-dark)' }} />
+        <div style={{ position: 'absolute', bottom: 6, left: 6, width: 14, height: 14, borderBottom: '3px solid var(--cyan-dark)', borderLeft: '3px solid var(--cyan-dark)' }} />
+        <div style={{ position: 'absolute', bottom: 6, right: 6, width: 14, height: 14, borderBottom: '3px solid var(--cyan-dark)', borderRight: '3px solid var(--cyan-dark)' }} />
+
         <canvas ref={canvasRef} style={{ display: 'block', borderRadius: 'var(--radius-sm)' }} />
 
         {/* Inactive overlay if session has ended */}
@@ -269,7 +286,7 @@ export const TeacherQrDisplay: React.FC<TeacherQrDisplayProps> = ({
           <div style={{
             position: 'absolute',
             inset: 0,
-            background: 'rgba(7, 9, 14, 0.92)',
+            background: 'rgba(5, 7, 13, 0.94)',
             borderRadius: 'var(--radius-lg)',
             display: 'flex',
             flexDirection: 'column',
@@ -280,9 +297,9 @@ export const TeacherQrDisplay: React.FC<TeacherQrDisplayProps> = ({
             textAlign: 'center',
           }}>
             <AlertTriangle style={{ width: 44, height: 44, color: 'var(--amber)' }} />
-            <h4 style={{ color: '#ffffff', fontSize: '1.2rem' }}>Session Closed</h4>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', maxWidth: 260 }}>
-              Attendance submissions are locked. Dynamic QR rotations have been halted.
+            <h4 style={{ color: '#ffffff', fontSize: '1.25rem', fontWeight: 800 }}>Session Concluded</h4>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', maxWidth: 280 }}>
+              Attendance submissions are permanently locked. Dynamic cryptographic rotation halted.
             </p>
           </div>
         )}
@@ -293,7 +310,7 @@ export const TeacherQrDisplay: React.FC<TeacherQrDisplayProps> = ({
         <div style={{
           marginTop: 10,
           background: 'rgba(244, 63, 94, 0.15)',
-          border: '1px solid rgba(244, 63, 94, 0.3)',
+          border: '1px solid rgba(244, 63, 94, 0.35)',
           padding: '8px 16px',
           borderRadius: 'var(--radius-md)',
           color: '#fda4af',
@@ -307,24 +324,25 @@ export const TeacherQrDisplay: React.FC<TeacherQrDisplayProps> = ({
         </div>
       )}
 
-      {/* Cryptographic Inspector Badges */}
+      {/* 3D Cryptographic Inspector Badges */}
       {payload && (
         <div style={{
           marginTop: 18,
           width: '100%',
           display: 'grid',
-          gridTemplateColumns: isFullscreen ? 'repeat(3, 1fr)' : 'repeat(3, 1fr)',
+          gridTemplateColumns: 'repeat(3, 1fr)',
           gap: 10,
         }}>
           <div style={{
-            background: 'rgba(255, 255, 255, 0.03)',
-            border: '1px solid var(--border-subtle)',
+            background: 'rgba(6, 12, 26, 0.7)',
+            border: '1px solid rgba(0, 242, 254, 0.2)',
             padding: '10px 14px',
             borderRadius: 'var(--radius-md)',
+            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)',
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--text-subtle)', fontSize: '0.72rem' }}>
-              <Key style={{ width: 12, height: 12, color: 'var(--primary-light)' }} />
-              <span>NONCE ID</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--text-cyber)', fontSize: '0.72rem', fontWeight: 700 }}>
+              <Key style={{ width: 12, height: 12 }} />
+              <span>NONCE UUID</span>
             </div>
             <div style={{
               fontFamily: 'var(--font-mono)',
@@ -340,13 +358,14 @@ export const TeacherQrDisplay: React.FC<TeacherQrDisplayProps> = ({
           </div>
 
           <div style={{
-            background: 'rgba(255, 255, 255, 0.03)',
-            border: '1px solid var(--border-subtle)',
+            background: 'rgba(6, 12, 26, 0.7)',
+            border: '1px solid rgba(245, 158, 11, 0.2)',
             padding: '10px 14px',
             borderRadius: 'var(--radius-md)',
+            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)',
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--text-subtle)', fontSize: '0.72rem' }}>
-              <Clock style={{ width: 12, height: 12, color: 'var(--amber)' }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#fbbf24', fontSize: '0.72rem', fontWeight: 700 }}>
+              <Clock style={{ width: 12, height: 12 }} />
               <span>EPOCH TS</span>
             </div>
             <div style={{
@@ -360,13 +379,14 @@ export const TeacherQrDisplay: React.FC<TeacherQrDisplayProps> = ({
           </div>
 
           <div style={{
-            background: 'rgba(255, 255, 255, 0.03)',
-            border: '1px solid var(--border-subtle)',
+            background: 'rgba(6, 12, 26, 0.7)',
+            border: '1px solid rgba(16, 185, 129, 0.2)',
             padding: '10px 14px',
             borderRadius: 'var(--radius-md)',
+            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)',
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--text-subtle)', fontSize: '0.72rem' }}>
-              <ShieldCheck style={{ width: 12, height: 12, color: 'var(--emerald)' }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#34d399', fontSize: '0.72rem', fontWeight: 700 }}>
+              <ShieldCheck style={{ width: 12, height: 12 }} />
               <span>HMAC SIG</span>
             </div>
             <div style={{

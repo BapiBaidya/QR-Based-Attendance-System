@@ -11,7 +11,8 @@ import {
   Users, 
   CheckCircle2, 
   Radio, 
-  Lock
+  Lock,
+  MapPin
 } from 'lucide-react';
 
 const ROTATION_INTERVAL_SECONDS = 15;
@@ -115,37 +116,48 @@ export const ProjectorScreen = () => {
         width: 440,
         margin: 2,
         color: {
-          dark: '#07090e',
+          dark: '#05070d',
           light: '#ffffff',
         },
-        errorCorrectionLevel: 'H', // Highest error correction for distant phone scanning
+        errorCorrectionLevel: 'H',
       },
       (err) => {
-        if (err) console.error('[Projector] Canvas render error:', err);
+        if (err) {
+          console.error('[Projector QRCode] Render error:', err);
+          setError('Failed to render projected QR');
+        }
       }
     );
   }, [qrPayload]);
 
-  // Fullscreen Handler
+  // Toggle Fullscreen Mode
   const toggleFullscreen = () => {
     if (!containerRef.current) return;
+
     if (!document.fullscreenElement) {
-      containerRef.current.requestFullscreen().then(() => setIsFullscreen(true)).catch(() => {});
+      containerRef.current.requestFullscreen().then(() => {
+        setIsFullscreen(true);
+      }).catch((err) => {
+        console.warn('Projector fullscreen rejected:', err);
+      });
     } else {
-      document.exitFullscreen().then(() => setIsFullscreen(false)).catch(() => {});
+      document.exitFullscreen().then(() => {
+        setIsFullscreen(false);
+      });
     }
   };
 
   useEffect(() => {
-    const handleFs = () => setIsFullscreen(!!document.fullscreenElement);
-    document.addEventListener('fullscreenchange', handleFs);
-    return () => document.removeEventListener('fullscreenchange', handleFs);
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, []);
 
-  // SVG circular countdown ring values
-  const radius = 28;
+  const radius = 26;
   const circumference = 2 * Math.PI * radius;
-  const progressPercent = secondsRemaining / ROTATION_INTERVAL_SECONDS;
+  const progressPercent = (secondsRemaining / ROTATION_INTERVAL_SECONDS);
   const strokeDashoffset = circumference * (1 - progressPercent);
 
   return (
@@ -154,29 +166,34 @@ export const ProjectorScreen = () => {
       style={{
         minHeight: '100vh',
         width: '100vw',
-        background: '#07090e',
-        color: '#ffffff',
+        background: '#05070d',
+        color: '#f8fafc',
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '36px 48px',
+        alignItems: 'center',
+        padding: isFullscreen ? '40px 60px' : '30px 40px',
         position: 'relative',
         overflow: 'hidden',
-        userSelect: 'none',
+        backgroundImage: `
+          radial-gradient(circle at 50% 10%, rgba(0, 242, 254, 0.15), transparent 60%),
+          radial-gradient(circle at 85% 85%, rgba(99, 102, 241, 0.15), transparent 55%),
+          linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px)
+        `,
+        backgroundSize: '100% 100%, 100% 100%, 60px 60px, 60px 60px',
       }}
     >
-      {/* Background Cybernetic Ambient Gradients */}
+      {/* Dynamic 3D Horizon Light Bar */}
       <div style={{
         position: 'absolute',
-        top: '-15%',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        width: '70vw',
-        height: '40vh',
-        background: 'radial-gradient(ellipse at center, rgba(99, 102, 241, 0.22), transparent 70%)',
+        top: 0,
+        left: '10%',
+        right: '10%',
+        height: 2,
+        background: 'linear-gradient(90deg, transparent, var(--cyan), #ffffff, var(--primary), transparent)',
+        boxShadow: '0 0 25px var(--cyan)',
         pointerEvents: 'none',
-        zIndex: 0,
       }} />
 
       {/* TOP BAR: Lecture Title & Controls */}
@@ -190,29 +207,29 @@ export const ProjectorScreen = () => {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <div style={{
-            width: 48,
-            height: 48,
+            width: 52,
+            height: 52,
             borderRadius: 'var(--radius-md)',
-            background: 'linear-gradient(135deg, var(--primary), var(--cyan))',
+            background: 'linear-gradient(135deg, var(--cyan), var(--primary))',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 0 25px var(--cyan-glow)',
+            boxShadow: '0 0 30px var(--cyan-glow)',
           }}>
-            <Radio style={{ width: 28, height: 28, color: '#ffffff' }} />
+            <Radio style={{ width: 28, height: 28, color: '#05070d' }} />
           </div>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <h1 style={{ fontSize: '1.6rem', fontWeight: 800, letterSpacing: '-0.02em' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <h1 style={{ fontSize: '1.75rem', fontWeight: 800, letterSpacing: '-0.02em' }}>
                 {sessionTitle}
               </h1>
-              <span className="badge badge-emerald" style={{ fontSize: '0.75rem' }}>
+              <span className="badge badge-emerald" style={{ fontSize: '0.75rem', padding: '5px 12px' }}>
                 <span className="pulse-dot text-emerald" />
-                Live Attendance Feed
+                Live Classroom Radar
               </span>
             </div>
             <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginTop: 2 }}>
-              Dynamic Anti-Proxy QR Rotation • Open student scanner to check in
+              Anti-Proxy Dynamic QR Rotation • Student Geofence Verified
             </p>
           </div>
         </div>
@@ -222,16 +239,16 @@ export const ProjectorScreen = () => {
           <button
             onClick={toggleFullscreen}
             className="btn btn-ghost"
-            style={{ padding: '10px 18px', background: 'rgba(255, 255, 255, 0.06)' }}
+            style={{ padding: '10px 20px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.15)' }}
             title="Toggle Classroom Fullscreen (F11)"
           >
             {isFullscreen ? <Minimize2 style={{ width: 20, height: 20 }} /> : <Maximize2 style={{ width: 20, height: 20 }} />}
-            <span style={{ fontSize: '0.85rem' }}>{isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}</span>
+            <span style={{ fontSize: '0.85rem', fontWeight: 700 }}>{isFullscreen ? 'Exit Fullscreen' : 'Fullscreen (F11)'}</span>
           </button>
         </div>
       </div>
 
-      {/* CENTER: Jumbo High-Contrast QR Code Box */}
+      {/* CENTER: 3D High-Contrast Holographic QR Code Box */}
       <div style={{
         display: 'flex',
         flexDirection: 'column',
@@ -245,19 +262,30 @@ export const ProjectorScreen = () => {
           padding: 24,
           background: '#ffffff',
           borderRadius: 28,
-          boxShadow: '0 0 70px rgba(6, 182, 212, 0.45), 0 30px 60px rgba(0, 0, 0, 0.85)',
+          boxShadow: '0 0 80px rgba(0, 242, 254, 0.45), 0 35px 70px rgba(0, 0, 0, 0.9)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          border: '4px solid rgba(0, 242, 254, 0.6)',
+          overflow: 'hidden',
         }}>
-          <canvas ref={canvasRef} style={{ display: 'block', borderRadius: 12 }} />
+          {/* Animated Laser Scanner Line */}
+          {isSessionActive && <div className="laser-scanner" />}
+
+          {/* Tech Brackets */}
+          <div style={{ position: 'absolute', top: 8, left: 8, width: 20, height: 20, borderTop: '4px solid var(--cyan-dark)', borderLeft: '4px solid var(--cyan-dark)' }} />
+          <div style={{ position: 'absolute', top: 8, right: 8, width: 20, height: 20, borderTop: '4px solid var(--cyan-dark)', borderRight: '4px solid var(--cyan-dark)' }} />
+          <div style={{ position: 'absolute', bottom: 8, left: 8, width: 20, height: 20, borderBottom: '4px solid var(--cyan-dark)', borderLeft: '4px solid var(--cyan-dark)' }} />
+          <div style={{ position: 'absolute', bottom: 8, right: 8, width: 20, height: 20, borderBottom: '4px solid var(--cyan-dark)', borderRight: '4px solid var(--cyan-dark)' }} />
+
+          <canvas ref={canvasRef} style={{ display: 'block', borderRadius: 14 }} />
 
           {/* Session Ended Transition Screen */}
           {!isSessionActive && (
             <div style={{
               position: 'absolute',
               inset: 0,
-              background: 'rgba(7, 9, 14, 0.96)',
+              background: 'rgba(5, 7, 13, 0.96)',
               borderRadius: 28,
               display: 'flex',
               flexDirection: 'column',
@@ -268,19 +296,20 @@ export const ProjectorScreen = () => {
               gap: 16,
             }}>
               <div style={{
-                width: 64,
-                height: 64,
+                width: 72,
+                height: 72,
                 borderRadius: '50%',
                 background: 'rgba(16, 185, 129, 0.15)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                border: '1px solid var(--emerald)',
+                border: '2px solid var(--emerald)',
+                boxShadow: '0 0 25px var(--emerald-glow)',
               }}>
-                <CheckCircle2 style={{ width: 36, height: 36, color: 'var(--emerald)' }} />
+                <CheckCircle2 style={{ width: 42, height: 42, color: 'var(--emerald)' }} />
               </div>
-              <h2 style={{ fontSize: '1.8rem', fontWeight: 800 }}>Attendance Concluded</h2>
-              <p style={{ color: 'var(--text-muted)', fontSize: '1rem', maxWidth: 320 }}>
+              <h2 style={{ fontSize: '2rem', fontWeight: 800 }}>Attendance Concluded</h2>
+              <p style={{ color: 'var(--text-muted)', fontSize: '1rem', maxWidth: 340 }}>
                 Attendance submissions for this lecture have been sealed by the faculty member.
               </p>
             </div>
@@ -292,13 +321,13 @@ export const ProjectorScreen = () => {
           <div style={{
             display: 'flex',
             alignItems: 'center',
-            gap: 16,
+            gap: 18,
             marginTop: 26,
-            background: 'rgba(15, 23, 42, 0.85)',
-            border: '1px solid var(--border-glow)',
-            padding: '10px 24px',
+            background: 'linear-gradient(135deg, rgba(16, 23, 41, 0.9), rgba(8, 12, 24, 0.95))',
+            border: '1px solid rgba(0, 242, 254, 0.35)',
+            padding: '12px 28px',
             borderRadius: 'var(--radius-full)',
-            boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+            boxShadow: '0 12px 35px rgba(0,0,0,0.6), 0 0 20px rgba(0, 242, 254, 0.15)',
           }}>
             {/* Circular Gauge */}
             <div style={{ position: 'relative', width: 62, height: 62, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -314,7 +343,10 @@ export const ProjectorScreen = () => {
                   strokeDasharray={circumference}
                   strokeDashoffset={strokeDashoffset}
                   strokeLinecap="round"
-                  style={{ transition: 'stroke-dashoffset 0.8s linear, stroke 0.3s ease' }}
+                  style={{
+                    transition: 'stroke-dashoffset 0.8s linear, stroke 0.3s ease',
+                    filter: secondsRemaining <= 4 ? 'drop-shadow(0 0 8px var(--rose))' : 'drop-shadow(0 0 8px var(--cyan))',
+                  }}
                 />
               </svg>
               <div style={{
@@ -322,19 +354,19 @@ export const ProjectorScreen = () => {
                 fontFamily: 'var(--font-mono)',
                 fontSize: '1rem',
                 fontWeight: 800,
-                color: secondsRemaining <= 4 ? '#fda4af' : '#ffffff',
+                color: secondsRemaining <= 4 ? '#fda4af' : 'var(--cyan)',
               }}>
                 {secondsRemaining}s
               </div>
             </div>
 
             <div>
-              <div style={{ fontSize: '0.95rem', fontWeight: 700 }}>
+              <div style={{ fontSize: '1rem', fontWeight: 800, color: '#f8fafc', letterSpacing: '-0.01em' }}>
                 Rotating HMAC-SHA256 Token
               </div>
-              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <RefreshCw style={{ width: 12, height: 12, animation: isLoading ? 'spin 1s linear infinite' : 'none' }} />
-                <span>Next token rotation in {secondsRemaining} seconds</span>
+              <div style={{ fontSize: '0.825rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 6, marginTop: 2 }}>
+                <RefreshCw style={{ width: 13, height: 13, color: 'var(--cyan)', animation: isLoading ? 'spin 1s linear infinite' : 'none' }} />
+                <span>Expires & burns in <strong style={{ color: 'var(--cyan)' }}>{secondsRemaining}s</strong></span>
               </div>
             </div>
           </div>
@@ -356,12 +388,12 @@ export const ProjectorScreen = () => {
         justifyContent: 'space-between',
         flexWrap: 'wrap',
         gap: 16,
-        borderTop: '1px solid var(--border-subtle)',
-        paddingTop: 20,
+        borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+        paddingTop: 22,
         zIndex: 10,
       }}>
         {/* Anti-Proxy Defense Verification Pill */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.85rem', color: 'var(--text-muted)' }}>
             <ShieldCheck style={{ width: 18, height: 18, color: 'var(--cyan)' }} />
             <span>Screenshot Blocking (15s Window)</span>
@@ -369,23 +401,29 @@ export const ProjectorScreen = () => {
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.85rem', color: 'var(--text-muted)' }}>
             <Lock style={{ width: 18, height: 18, color: 'var(--emerald)' }} />
-            <span>Single-Use Nonce Burn Active</span>
+            <span>Single-Use Nonce Burn</span>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+            <MapPin style={{ width: 18, height: 18, color: 'var(--amber)' }} />
+            <span>Geofence GPS Perimeter</span>
           </div>
         </div>
 
-        {/* Live Attendance Counter */}
+        {/* Live Attendance Counter with 3D Holographic Pill */}
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          gap: 10,
-          background: 'rgba(16, 185, 129, 0.12)',
-          border: '1px solid rgba(16, 185, 129, 0.3)',
-          padding: '8px 20px',
+          gap: 12,
+          background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(6, 182, 212, 0.1))',
+          border: '1px solid rgba(16, 185, 129, 0.4)',
+          padding: '10px 24px',
           borderRadius: 'var(--radius-full)',
+          boxShadow: '0 0 25px rgba(16, 185, 129, 0.25)',
         }}>
-          <Users style={{ width: 18, height: 18, color: 'var(--emerald)' }} />
-          <span style={{ fontSize: '0.9rem', color: '#ffffff', fontWeight: 600 }}>
-            <strong style={{ color: 'var(--emerald)', fontSize: '1.1rem' }}>{attendeeCount}</strong> Students Checked In
+          <Users style={{ width: 20, height: 20, color: 'var(--emerald)' }} />
+          <span style={{ fontSize: '0.95rem', color: '#ffffff', fontWeight: 600 }}>
+            <strong style={{ color: 'var(--emerald)', fontSize: '1.25rem', fontFamily: 'var(--font-mono)' }}>{attendeeCount}</strong> Students Checked In
           </span>
         </div>
       </div>
